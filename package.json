@@ -1,0 +1,19 @@
+{
+  "name": "storybook-a11y-report",
+  "version": "1.0.0",
+  "description": "CLI tool for storybook-addon-a11y.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kalbeekatz/storybook-a11y-report.git"
+  },
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/kalbeekatz/storybook-a11y-report/issues"
+  },
+  "homepage": "https://github.com/kalbeekatz/storybook-a11y-report#readme"
+}
