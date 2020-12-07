@@ -1,19 +1,26 @@
 {
   "name": "storybook-a11y-report",
   "version": "1.0.0",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "bin": {
+    "storybook-a11y-report": "dist/bin.js"
+  },
   "description": "CLI tool for storybook-addon-a11y.",
-  "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "tsc": "tsc"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/kalbeekatz/storybook-a11y-report.git"
   },
-  "author": "",
+  "author": "Katsuhito Karube",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/kalbeekatz/storybook-a11y-report/issues"
   },
-  "homepage": "https://github.com/kalbeekatz/storybook-a11y-report#readme"
+  "homepage": "https://github.com/kalbeekatz/storybook-a11y-report#readme",
+  "devDependencies": {
+    "typescript": "^4.1.2"
+  }
 }
