@@ -1,6 +1,7 @@
 import os from 'os'
 import path from 'path'
 import fs from 'fs'
+import mkdirp from 'mkdirp'
 import {
   Story,
   StorybookConnection,
@@ -30,23 +31,33 @@ interface A11yParameters {
 
 const cpuLength = os.cpus()?.length
 if (cpuLength < 2) throw Error('Insufficient cpu')
-const argv = minimist(process.argv.slice(2))
+const argv = minimist(process.argv.slice(2), {
+  alias: {
+    i: 'include',
+    e: 'exclude',
+    f: 'filter',
+    o: 'omit',
+  },
+})
 const {
   include = [],
   exclude = [],
   filter = [],
   omit = [],
   storybookUrl = 'http://localhost:6006',
+  outDir = '__report__',
 } = argv
 const a11yRules = getRules()
-const filters = flatten([filter]).map((givenId) => {
-  if (a11yRules.some((rule) => rule.ruleId === givenId)) return givenId
+const filters = flatten([filter]).reduce((acc: string[], givenId) => {
+  if (a11yRules.some((rule) => rule.ruleId === givenId)) return acc.concat(givenId)
   console.log(colors.yellow(`Confirm --filter option. A11y ID "${givenId}" is invalid.`))
-})
-const omits = flatten([omit]).map((givenId) => {
-  if (a11yRules.some((rule) => rule.ruleId === givenId)) return givenId
+  return acc
+}, [])
+const omits = flatten([omit]).reduce((acc: string[], givenId) => {
+  if (a11yRules.some((rule) => rule.ruleId === givenId)) return acc.concat(givenId)
   console.log(colors.yellow(`Confirm --omit option. A11y ID "${givenId}" is invalid.`))
-})
+  return acc
+}, [])
 const createReportMessage = (violationId: string, violations: Result[]) => {
   return violations
     .sort((a, b) => (a.storyId > b.storyId ? 1 : a.storyId < b.storyId ? -1 : 0))
@@ -140,17 +151,19 @@ const formatResults = (results: Result[][]) => {
       const report = createReport(formatResults(results), filters, omits)
       if (report) {
         console.log(report)
+        await mkdirp(outDir)
         fs.writeFileSync(
-          'report/a11y_report.md',
-          `filtered by: ${filters}\nomit: ${omits}\ninclude: ${include}\nexclude: ${exclude}\n\n` +
+          `${outDir}/a11y_report.md`,
+          `filter: ${filters}\nomit: ${omits}\ninclude: ${include}\nexclude: ${exclude}\n\n` +
             report,
         )
-        throw Error(
+        console.error(
           `You can check the report out here:\n    ${path.resolve(
             __dirname,
-            '../report/a11y_report.md',
+            `../${outDir}/a11y_report.md`,
           )}`,
         )
+        process.exit(1)
       } else {
         console.log(`\n✨ ✨ That's perfect, there is no a11y violation! ✨ ✨`)
       }
@@ -159,6 +172,7 @@ const formatResults = (results: Result[][]) => {
         `${errorText} There is an error about the execution of this script:`,
         err.message,
       )
+      process.exit(1)
     } finally {
       await storiesBrowser.close()
       await Promise.all(workers.map((worker) => worker.close()))
@@ -166,6 +180,7 @@ const formatResults = (results: Result[][]) => {
     }
   } catch (err) {
     console.error(`${errorText} There is an error about connection:`, err.message)
+    process.exit(1)
   }
 })()
 
