@@ -9,7 +9,7 @@
   "description": "CLI tool for storybook-addon-a11y.",
   "scripts": {
     "build": "tsc",
-    "prepublish": "npm run build"
+    "prepare": "npm run build"
   },
   "repository": {
     "type": "git",
