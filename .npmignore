@@ -1,0 +1,6 @@
+__report__/
+node_modules/
+src/
+.eslintrc.json
+prettier.config.js
+tsconfig.json
