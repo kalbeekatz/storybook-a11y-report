@@ -70,11 +70,8 @@ const createReportMessage = (violationId: string, violations: Result[]) => {
   return violations
     .sort((a, b) => (a.storyId > b.storyId ? 1 : a.storyId < b.storyId ? -1 : 0))
     .reduce(
-      (acc, { storyId }) =>
-        (acc += `    ${colors.blue.underline(`${storybookUrl}/?path=/story/${storyId}`)}\n`),
-      `${colors.bold(`A11y ID: ${violationId}`)}\ndescription: ${
-        violations[0].description
-      }\nDetected on:\n`,
+      (acc, { storyId }) => (acc += `    ${storybookUrl}/?path=/story/${storyId}\n`),
+      `A11y ID: ${violationId}\ndescription: ${violations[0].description}\nDetected on:\n`,
     )
 }
 const createReport = (
