@@ -1,10 +1,10 @@
 {
   "name": "storybook-a11y-report",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "bin": {
-    "storybook-a11y-report": "dist/bin.js"
+    "storybook-a11y-report": "dist/index.js"
   },
   "description": "CLI tool for storybook-addon-a11y.",
   "scripts": {
