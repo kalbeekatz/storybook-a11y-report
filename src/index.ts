@@ -164,15 +164,15 @@ const spinner2 = ora('now reporting...\n')
       spinner2.stop()
       if (report) {
         console.log(report)
-        await mkdirp(outDir)
+        await mkdirp(path.resolve(process.cwd(), outDir))
         fs.writeFileSync(
-          `${outDir}/a11y_report.md`,
+          `${path.resolve(process.cwd(), outDir)}/a11y_report.md`,
           `filter: ${filters}\nomit: ${omits}\ninclude: ${include}\nexclude: ${exclude}\n\n` +
             report,
         )
         console.log(
           `You can check the report out here:\n    ${colors.blue.underline(
-            `${path.resolve(__dirname, `../${outDir}/a11y_report.md`)}`,
+            `${path.resolve(process.cwd(), `${outDir}/a11y_report.md`)}`,
           )}`,
         )
         if (exit) process.exit(1)
