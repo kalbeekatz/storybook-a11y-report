@@ -18,6 +18,7 @@ npm install -D storybook-a11y-report
 # Or globally.
 npm install -g storybook-a11y-report
 
+# You will need to start Storybook before running this command.
 npx storybook-a11y-report
 ```
 
