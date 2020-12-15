@@ -7,6 +7,12 @@
     "storybook-a11y-report": "dist/index.js"
   },
   "description": "CLI tool for storybook-addon-a11y.",
+  "keywords": [
+    "storybook",
+    "a11y",
+    "accessibility",
+    "storybook-addon-a11y"
+  ],
   "scripts": {
     "build": "tsc",
     "prepare": "npm run build"
