@@ -46,7 +46,7 @@
     "minimatch": "^3.0.4",
     "minimist": "^1.2.5",
     "mkdirp": "^1.0.4",
-    "ora": "^5.4.1",
+    "ora": "^6.0.0",
     "remeda": "0.0.30",
     "storycrawler": "^3.1.0"
   }
