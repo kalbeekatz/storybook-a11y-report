@@ -18,7 +18,7 @@
     "eject": "react-scripts eject",
     "storybook": "start-storybook -p 6006 -s public",
     "build-storybook": "build-storybook -s public",
-    "a11y-report": "node ../../dist --outDir '__report-all__'"
+    "a11y-report": "storybook-a11y-report --outDir '__report-all__'"
   },
   "eslintConfig": {
     "extends": [

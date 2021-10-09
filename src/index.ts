@@ -25,6 +25,7 @@ type Result = {
   description: string
 }
 interface A11yParameters {
+  disable?: boolean
   element?: ElementContext
   config?: Spec
   options?: RunOptions
@@ -146,18 +147,23 @@ const spinner2 = ora('now reporting...\n')
           }
           // @ts-ignore
           const axe: typeof Axe = window['axe']
-          const { element = getElement(), config, options = {} } = getParams(story.id)
+          const { element = getElement(), config, options = {}, disable } = getParams(story.id)
           axe.reset()
+          if (disable) {
+            return null
+          }
           if (config) {
             axe.configure(config)
           }
           return axe.run(element, options)
         }, story)
-        return runResults.violations.map((violation) => ({
-          violationId: violation.id,
-          storyId: story.id,
-          description: violation.description,
-        }))
+        return (
+          runResults?.violations.map((violation) => ({
+            violationId: violation.id,
+            storyId: story.id,
+            description: violation.description,
+          })) || []
+        )
       })
       const results = await service.execute()
       const report = createReport(formatResults(results), filters, omits)
@@ -179,7 +185,7 @@ const spinner2 = ora('now reporting...\n')
       } else {
         console.log(`\n✨ ✨ That's perfect, there is no a11y violation! ✨ ✨`)
       }
-    } catch (err) {
+    } catch (err: any) {
       console.error(
         `${errorText} There is an error about the execution of this script:`,
         err.message,
@@ -192,7 +198,7 @@ const spinner2 = ora('now reporting...\n')
       await Promise.all(workers.map((worker) => worker.close()))
       await connection.disconnect()
     }
-  } catch (err) {
+  } catch (err: any) {
     spinner1.stop()
     console.error(`${errorText} There is an error about connection:`, err.message)
     process.exit(1)
