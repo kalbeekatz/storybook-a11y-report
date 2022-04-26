@@ -1,2 +1,2 @@
-import colors from 'colors'
-export const errorText = colors.red('ERROR!')
+import chalk from 'chalk'
+export const errorText = chalk.red('ERROR!')
