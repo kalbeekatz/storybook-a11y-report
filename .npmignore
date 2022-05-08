@@ -4,3 +4,4 @@ src/
 .eslintrc.json
 prettier.config.js
 tsconfig.json
+examples/
