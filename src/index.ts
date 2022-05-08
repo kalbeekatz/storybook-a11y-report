@@ -131,6 +131,10 @@ const spinner2 = ora('now reporting...\n')
       const service = createExecutionService(workers, stories, (story) => async (worker) => {
         await worker.setCurrentStory(story)
         await new MetricsWatcher(worker.page).waitForStable()
+        // Add axe-core to page.
+        await worker.page.addScriptTag({
+          path: require.resolve('axe-core')
+        })
         const runResults = await worker.page.evaluate((story) => {
           const getElement = () => {
             return document.getElementById('root') || document
@@ -146,18 +150,21 @@ const spinner2 = ora('now reporting...\n')
             )
           }
           // @ts-ignore
-          const axe: typeof Axe = window['axe']
           const { element = getElement(), config, options = {}, disable } = getParams(story.id)
+          // @ts-ignore
           axe.reset()
           if (disable) {
             return null
           }
           if (config) {
+            // @ts-ignore
             axe.configure(config)
           }
+          // @ts-ignore
           return axe.run(element, options)
         }, story)
         return (
+          // @ts-ignore
           runResults?.violations.map((violation) => ({
             violationId: violation.id,
             storyId: story.id,
