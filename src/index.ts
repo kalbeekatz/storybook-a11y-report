@@ -15,7 +15,7 @@ import { pipe, groupBy, flatten } from 'remeda'
 import Axe, { ElementContext, Spec, RunOptions, getRules } from 'axe-core'
 import minimist from 'minimist'
 import minimatch from 'minimatch'
-import colors from 'colors'
+import chalk from 'chalk'
 import ora from 'ora'
 import { errorText } from './constants'
 
@@ -56,14 +56,14 @@ const a11yRules = getRules()
 const filters = flatten([filter]).reduce((acc: string[], givenId) => {
   if (a11yRules.some((rule) => rule.ruleId === givenId)) return acc.concat(givenId)
   console.log(
-    colors.yellow(`${colors.red('✗')} Confirm --filter option. A11y ID "${givenId}" is invalid.`),
+    chalk.yellow(`${chalk.red('✗')} Confirm --filter option. A11y ID "${givenId}" is invalid.`),
   )
   return acc
 }, [])
 const omits = flatten([omit]).reduce((acc: string[], givenId) => {
   if (a11yRules.some((rule) => rule.ruleId === givenId)) return acc.concat(givenId)
   console.log(
-    colors.yellow(`${colors.red('✗')} Confirm --omit option. A11y ID "${givenId}" is invalid.`),
+    chalk.yellow(`${chalk.red('✗')} Confirm --omit option. A11y ID "${givenId}" is invalid.`),
   )
   return acc
 }, [])
@@ -121,7 +121,7 @@ const spinner2 = ora('now reporting...\n')
     const storiesBrowser = await new StoriesBrowser(connection).boot()
     const allStories = await storiesBrowser.getStories()
     const stories = filterStories(allStories, flatten([include]), flatten([exclude]))
-    spinner1.succeed(`Found ${colors.green(stories.length.toString())} stories.\n`)
+    spinner1.succeed(`Found ${chalk.green(stories.length.toString())} stories.\n`)
     spinner2.start()
     const workers = await Promise.all(
       [...Array(cpuLength - 1).keys()].map((i) => new StoryPreviewBrowser(connection, i).boot()),
@@ -184,7 +184,7 @@ const spinner2 = ora('now reporting...\n')
             report,
         )
         console.log(
-          `You can check the report out here:\n    ${colors.blue.underline(
+          `You can check the report out here:\n    ${chalk.underline.blue(
             `${path.resolve(process.cwd(), `${outDir}/a11y_report.md`)}`,
           )}`,
         )
