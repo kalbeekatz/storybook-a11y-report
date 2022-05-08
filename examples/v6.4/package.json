@@ -18,7 +18,9 @@
     "eject": "react-scripts eject",
     "storybook": "start-storybook -p 6006 -s public",
     "build-storybook": "build-storybook -s public",
-    "a11y-report": "storybook-a11y-report --outDir '__report-all__'"
+    "a11y-report": "storybook-a11y-report --outDir '__report-all__'",
+    "a11y-report:ignore-specific-rule": "storybook-a11y-report -o color-contrast --outDir '__report-ignore-specific-rule__'",
+    "a11y-report:ignore-specific-component": "storybook-a11y-report -e '**/Form/**' --outDir '__report-ignore-specific-component__'"
   },
   "eslintConfig": {
     "extends": [
@@ -49,13 +51,13 @@
     ]
   },
   "devDependencies": {
-    "@storybook/addon-a11y": "^6.3.10",
-    "@storybook/addon-actions": "^6.3.10",
-    "@storybook/addon-essentials": "^6.3.10",
-    "@storybook/addon-links": "^6.3.10",
-    "@storybook/node-logger": "^6.3.10",
+    "@storybook/addon-a11y": "^6.4.22",
+    "@storybook/addon-actions": "^6.4.22",
+    "@storybook/addon-essentials": "^6.4.22",
+    "@storybook/addon-links": "^6.4.22",
+    "@storybook/node-logger": "^6.4.22",
     "@storybook/preset-create-react-app": "^3.2.0",
-    "@storybook/react": "^6.3.10",
+    "@storybook/react": "^6.4.22",
     "storybook-a11y-report": "0.0.14"
   }
 }
