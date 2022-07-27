@@ -18,12 +18,10 @@ import minimatch from 'minimatch'
 import chalk from 'chalk'
 import ora from 'ora'
 import { errorText } from './constants'
+import { Result } from './result'
+import { createMdReport } from './markdownReporter'
+import { createHtmlReport } from './htmlReporter'
 
-type Result = {
-  violationId: string
-  storyId: string
-  description: string
-}
 interface A11yParameters {
   disable?: boolean
   element?: ElementContext
@@ -67,39 +65,8 @@ const omits = flatten([omit]).reduce((acc: string[], givenId) => {
   )
   return acc
 }, [])
-const createReportMessage = (violationId: string, violations: Result[]) => {
-  return violations
-    .sort((a, b) => (a.storyId > b.storyId ? 1 : a.storyId < b.storyId ? -1 : 0))
-    .reduce(
-      (acc, { storyId }) => (acc += `    ${storybookUrl}/?path=/story/${storyId}\n`),
-      `A11y ID: ${violationId}\ndescription: ${violations[0].description}\nDetected on:\n`,
-    )
-}
-const createReport = (
-  results: {
-    [violationId: string]: Array<Result>
-  },
-  filters: string[],
-  omits: string[],
-) =>
-  Object.entries(results)
-    .map(([violationId, violations]) => {
-      if (filters.length) {
-        if (filters.includes(violationId)) {
-          return createReportMessage(violationId, violations)
-        }
-      }
-      if (omits.length) {
-        if (!omits.includes(violationId)) {
-          return createReportMessage(violationId, violations)
-        }
-      }
-      // If the "filters" and "omits" are empty, report according to all rules.
-      if (!filters.length && !omits.length) {
-        return createReportMessage(violationId, violations)
-      }
-    })
-    .join('\n')
+
+const createReport = createMdReport
 const formatResults = (results: Result[][]) => {
   const grouped = pipe(
     flatten(results),
@@ -170,16 +137,18 @@ const spinner2 = ora('now reporting...\n')
         )
       })
       const results = await service.execute()
-      const report = createReport(formatResults(results), filters, omits)
+      const report = createReport(
+        storybookUrl,
+        formatResults(results),
+        filters,
+        omits,
+        include,
+        exclude,
+      )
       spinner2.stop()
       if (report) {
-        console.log(report)
         await mkdirp(path.resolve(process.cwd(), outDir))
-        fs.writeFileSync(
-          `${path.resolve(process.cwd(), outDir)}/a11y_report.md`,
-          `filter: ${filters}\nomit: ${omits}\ninclude: ${include}\nexclude: ${exclude}\n\n` +
-            report,
-        )
+        fs.writeFileSync(`${path.resolve(process.cwd(), outDir)}/a11y_report.md`, report)
         console.log(
           `You can check the report out here:\n    ${chalk.underline.blue(
             `${path.resolve(process.cwd(), `${outDir}/a11y_report.md`)}`,
