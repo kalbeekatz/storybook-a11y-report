@@ -32,6 +32,7 @@ interface A11yParameters {
 
 const cpuLength = os.cpus()?.length
 if (cpuLength < 2) throw Error('Insufficient cpu')
+const supportedOutputFormats = ['md', 'html']
 const argv = minimist(process.argv.slice(2), {
   alias: {
     i: 'include',
@@ -49,7 +50,16 @@ const {
   storybookUrl = 'http://localhost:6006',
   outDir = '__report__',
   exit,
+  outputFormat = 'md',
 } = argv
+if (!supportedOutputFormats.includes(outputFormat)) {
+  console.error(
+    `${chalk.red(
+      `ERROR! Incorrect output format passed : ${outputFormat}, supported format are md and html`,
+    )}`,
+  )
+  process.exit(1)
+}
 const a11yRules = getRules()
 const filters = flatten([filter]).reduce((acc: string[], givenId) => {
   if (a11yRules.some((rule) => rule.ruleId === givenId)) return acc.concat(givenId)
@@ -66,7 +76,7 @@ const omits = flatten([omit]).reduce((acc: string[], givenId) => {
   return acc
 }, [])
 
-const createReport = createMdReport
+const createReport = outputFormat === 'md' ? createMdReport : createHtmlReport
 const formatResults = (results: Result[][]) => {
   const grouped = pipe(
     flatten(results),
@@ -148,10 +158,13 @@ const spinner2 = ora('now reporting...\n')
       spinner2.stop()
       if (report) {
         await mkdirp(path.resolve(process.cwd(), outDir))
-        fs.writeFileSync(`${path.resolve(process.cwd(), outDir)}/a11y_report.md`, report)
+        fs.writeFileSync(
+          `${path.resolve(process.cwd(), outDir)}/a11y_report.${outputFormat}`,
+          report,
+        )
         console.log(
           `You can check the report out here:\n    ${chalk.underline.blue(
-            `${path.resolve(process.cwd(), `${outDir}/a11y_report.md`)}`,
+            `${path.resolve(process.cwd(), `${outDir}/a11y_report.${outputFormat}`)}`,
           )}`,
         )
         if (exit) process.exit(1)
