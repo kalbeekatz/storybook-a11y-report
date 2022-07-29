@@ -1,14 +1,20 @@
-filter: 
-omit: 
-include: 
-exclude: 
+# Accessibility report
+- filter: 
+- omit: 
+- include: 
+- exclude: 
 
-A11y ID: color-contrast
-description: Ensures the contrast between foreground and background colors meets WCAG 2 AA contrast ratio thresholds
-Detected on:
-    http://localhost:6006/?path=/story/example-button--inaccessible
+## 2 violations have been found
+### A11y ID: color-contrast
+Description: Ensures the contrast between foreground and background colors meets WCAG 2 AA contrast ratio thresholds
 
-A11y ID: label
-description: Ensures every form element has a label
 Detected on:
-    http://localhost:6006/?path=/story/example-form--basic
+- [example-button--inaccessible](http://localhost:6006/?path=/story/example-button--inaccessible
+)
+
+### A11y ID: label
+Description: Ensures every form element has a label
+
+Detected on:
+- [example-form--basic](http://localhost:6006/?path=/story/example-form--basic
+)
