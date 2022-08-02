@@ -18,12 +18,10 @@ import minimatch from 'minimatch'
 import chalk from 'chalk'
 import ora from 'ora'
 import { errorText } from './constants'
+import { Result } from './result'
+import { createMdReport } from './markdownReporter'
+import { createHtmlReport } from './htmlReporter'
 
-type Result = {
-  violationId: string
-  storyId: string
-  description: string
-}
 interface A11yParameters {
   disable?: boolean
   element?: ElementContext
@@ -34,6 +32,7 @@ interface A11yParameters {
 
 const cpuLength = os.cpus()?.length
 if (cpuLength < 2) throw Error('Insufficient cpu')
+const supportedOutputFormats = ['md', 'html']
 const argv = minimist(process.argv.slice(2), {
   alias: {
     i: 'include',
@@ -51,7 +50,16 @@ const {
   storybookUrl = 'http://localhost:6006',
   outDir = '__report__',
   exit,
+  outputFormat = 'md',
 } = argv
+if (!supportedOutputFormats.includes(outputFormat)) {
+  console.error(
+    `${chalk.red(
+      `ERROR! Incorrect output format passed : ${outputFormat}, supported format are md and html`,
+    )}`,
+  )
+  process.exit(1)
+}
 const a11yRules = getRules()
 const filters = flatten([filter]).reduce((acc: string[], givenId) => {
   if (a11yRules.some((rule) => rule.ruleId === givenId)) return acc.concat(givenId)
@@ -67,39 +75,8 @@ const omits = flatten([omit]).reduce((acc: string[], givenId) => {
   )
   return acc
 }, [])
-const createReportMessage = (violationId: string, violations: Result[]) => {
-  return violations
-    .sort((a, b) => (a.storyId > b.storyId ? 1 : a.storyId < b.storyId ? -1 : 0))
-    .reduce(
-      (acc, { storyId }) => (acc += `    ${storybookUrl}/?path=/story/${storyId}\n`),
-      `A11y ID: ${violationId}\ndescription: ${violations[0].description}\nDetected on:\n`,
-    )
-}
-const createReport = (
-  results: {
-    [violationId: string]: Array<Result>
-  },
-  filters: string[],
-  omits: string[],
-) =>
-  Object.entries(results)
-    .map(([violationId, violations]) => {
-      if (filters.length) {
-        if (filters.includes(violationId)) {
-          return createReportMessage(violationId, violations)
-        }
-      }
-      if (omits.length) {
-        if (!omits.includes(violationId)) {
-          return createReportMessage(violationId, violations)
-        }
-      }
-      // If the "filters" and "omits" are empty, report according to all rules.
-      if (!filters.length && !omits.length) {
-        return createReportMessage(violationId, violations)
-      }
-    })
-    .join('\n')
+
+const createReport = outputFormat === 'md' ? createMdReport : createHtmlReport
 const formatResults = (results: Result[][]) => {
   const grouped = pipe(
     flatten(results),
@@ -170,19 +147,24 @@ const spinner2 = ora('now reporting...\n')
         )
       })
       const results = await service.execute()
-      const report = createReport(formatResults(results), filters, omits)
+      const report = createReport(
+        storybookUrl,
+        formatResults(results),
+        filters,
+        omits,
+        include,
+        exclude,
+      )
       spinner2.stop()
       if (report) {
-        console.log(report)
         await mkdirp(path.resolve(process.cwd(), outDir))
         fs.writeFileSync(
-          `${path.resolve(process.cwd(), outDir)}/a11y_report.md`,
-          `filter: ${filters}\nomit: ${omits}\ninclude: ${include}\nexclude: ${exclude}\n\n` +
-            report,
+          `${path.resolve(process.cwd(), outDir)}/a11y_report.${outputFormat}`,
+          report,
         )
         console.log(
           `You can check the report out here:\n    ${chalk.underline.blue(
-            `${path.resolve(process.cwd(), `${outDir}/a11y_report.md`)}`,
+            `${path.resolve(process.cwd(), `${outDir}/a11y_report.${outputFormat}`)}`,
           )}`,
         )
         if (exit) process.exit(1)

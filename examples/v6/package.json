@@ -19,6 +19,7 @@
     "storybook": "start-storybook -p 6006 -s public",
     "build-storybook": "build-storybook -s public",
     "a11y-report": "storybook-a11y-report --outDir '__report-all__'",
+    "a11y-report:html": "storybook-a11y-report --outDir '__report-all__' --outputFormat html",
     "a11y-report:ignore-specific-rule": "storybook-a11y-report -o color-contrast --outDir '__report-ignore-specific-rule__'",
     "a11y-report:ignore-specific-component": "storybook-a11y-report -e '**/Form/**' --outDir '__report-ignore-specific-component__'"
   },
