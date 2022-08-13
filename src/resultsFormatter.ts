@@ -1,4 +1,4 @@
-import { Result } from './result'
+import { Result } from './result.js'
 
 interface CreateReportMessageFn {
   (storybookUrl: string, violationId: string, violations: Result[]): string

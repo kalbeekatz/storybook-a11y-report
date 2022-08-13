@@ -1,5 +1,5 @@
-import { Result } from './result'
-import { formatResults } from './resultsFormatter'
+import { Result } from './result.js'
+import { formatResults } from './resultsFormatter.js'
 
 const createHtmlReportMessage = (
   storybookUrl: string,
