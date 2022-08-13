@@ -12,15 +12,19 @@ import {
   createExecutionService,
 } from 'storycrawler'
 import { pipe, groupBy, flatten } from 'remeda'
-import Axe, { ElementContext, Spec, RunOptions, getRules } from 'axe-core'
+import Axe, { ElementContext, Spec, RunOptions } from 'axe-core'
 import minimist from 'minimist'
 import minimatch from 'minimatch'
 import chalk from 'chalk'
 import ora from 'ora'
-import { errorText } from './constants'
-import { Result } from './result'
-import { createMdReport } from './markdownReporter'
-import { createHtmlReport } from './htmlReporter'
+import { createRequire } from 'module'
+import { errorText } from './constants.js'
+import { Result } from './result.js'
+import { createMdReport } from './markdownReporter.js'
+import { createHtmlReport } from './htmlReporter.js'
+
+const require = createRequire(import.meta.url);
+const { getRules } = Axe
 
 interface A11yParameters {
   disable?: boolean

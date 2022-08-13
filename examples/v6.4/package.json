@@ -59,6 +59,6 @@
     "@storybook/node-logger": "^6.4.22",
     "@storybook/preset-create-react-app": "^3.2.0",
     "@storybook/react": "^6.4.22",
-    "storybook-a11y-report": "0.0.14"
+    "storybook-a11y-report": "file:../.."
   }
 }
