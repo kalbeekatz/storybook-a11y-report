@@ -81,6 +81,20 @@ const omits = flatten([omit]).reduce((acc: string[], givenId) => {
 }, [])
 
 const createReport = outputFormat === 'md' ? createMdReport : createHtmlReport
+
+const removeTags = (str: string) => {
+  let cleanedString = str
+
+  if ((str !== null) && (str !== '') && str.includes('<')) {
+    str = str.toString();
+    const removedOpenBracket = str.replace( '<', '' );
+    cleanedString = removedOpenBracket.replace( '>', '' );
+    removeTags(cleanedString)
+  }
+
+  return cleanedString;
+}
+
 const formatResults = (results: Result[][]) => {
   const grouped = pipe(
     flatten(results),
@@ -143,12 +157,15 @@ const spinner2 = ora('now reporting...\n')
           return axe.run(element, options)
         }, story)
         return (
-          runResults?.violations.map((violation) => ({
-            violationId: violation.id,
-            storyId: story.id,
-            description: violation.description,
-          })) || []
-        )
+            runResults?.violations.map((violation) => {
+                  const cleanDescription = removeTags(violation.description)
+                  return ({
+                    violationId: violation.id,
+                    storyId: story.id,
+                    description: cleanDescription,
+                  })
+                }
+            ) || [])
       })
       const results = await service.execute()
       const report = createReport(
@@ -196,10 +213,10 @@ const spinner2 = ora('now reporting...\n')
 })()
 
 function filterStories(flatStories: Story[], include: string[], exclude: string[]): Story[] {
-  const conbined = flatStories.map((s) => ({ ...s, name: s.kind + '/' + s.story }))
+  const combined = flatStories.map((s) => ({ ...s, name: s.kind + '/' + s.story }))
   const included = include.length
-    ? conbined.filter((s) => include.some((rule) => minimatch(s.name, rule)))
-    : conbined
+    ? combined.filter((s) => include.some((rule) => minimatch(s.name, rule)))
+    : combined
   const excluded = exclude.length
     ? included.filter((s) => !exclude.some((rule) => minimatch(s.name, rule)))
     : included
