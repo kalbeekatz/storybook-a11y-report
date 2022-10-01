@@ -191,7 +191,7 @@ const spinner2 = ora('now reporting...\n')
         )
         if (exit) process.exit(1)
       } else {
-        console.log("\n✨ ✨ That's perfect, there is no a11y violation! ✨ ✨")
+        console.log('\n✨ ✨ That\'s perfect, there is no a11y violation! ✨ ✨')
       }
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
