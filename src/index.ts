@@ -23,7 +23,7 @@ import { Result } from './result.js'
 import { createMdReport } from './markdownReporter.js'
 import { createHtmlReport } from './htmlReporter.js'
 
-const require = createRequire(import.meta.url);
+const require = createRequire(import.meta.url)
 const { getRules } = Axe
 
 interface A11yParameters {
@@ -85,14 +85,14 @@ const createReport = outputFormat === 'md' ? createMdReport : createHtmlReport
 const removeTags = (str: string) => {
   let cleanedString = str
 
-  if ((str !== null) && (str !== '') && str.includes('<')) {
-    str = str.toString();
-    const removedOpenBracket = str.replace( '<', '' );
-    cleanedString = removedOpenBracket.replace( '>', '' );
+  if (str !== null && str !== '' && str.includes('<')) {
+    str = str.toString()
+    const removedOpenBracket = str.replace('<', '')
+    cleanedString = removedOpenBracket.replace('>', '')
     removeTags(cleanedString)
   }
 
-  return cleanedString;
+  return cleanedString
 }
 
 const formatResults = (results: Result[][]) => {
@@ -157,15 +157,15 @@ const spinner2 = ora('now reporting...\n')
           return axe.run(element, options)
         }, story)
         return (
-            runResults?.violations.map((violation) => {
-                  const cleanDescription = removeTags(violation.description)
-                  return ({
-                    violationId: violation.id,
-                    storyId: story.id,
-                    description: cleanDescription,
-                  })
-                }
-            ) || [])
+          runResults?.violations.map((violation) => {
+            const cleanDescription = removeTags(violation.description)
+            return {
+              violationId: violation.id,
+              storyId: story.id,
+              description: cleanDescription,
+            }
+          }) || []
+        )
       })
       const results = await service.execute()
       const report = createReport(
