@@ -23,7 +23,7 @@
       "eslint --ext .ts ./src --fix"
     ],
     "./src/**": [
-      "prettier --write ."
+      "prettier --write ./src/"
     ]
   },
   "repository": {
