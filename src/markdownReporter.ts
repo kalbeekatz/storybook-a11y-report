@@ -32,5 +32,5 @@ export const createMdReport = (
     ? `## ${violationsCount} violations have been found\n${formattedResults.join('\n\n')}`
     : ''
 
-  return `${title}${commandOptions}${details}`
+  return { report: `${title}${commandOptions}${details}`, hasViolation: !!violationsCount }
 }
