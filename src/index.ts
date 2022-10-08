@@ -169,7 +169,7 @@ const spinner2 = ora('now reporting...\n')
         )
       })
       const results = await service.execute()
-      const report = createReport(
+      const { report, hasViolation } = createReport(
         storybookUrl,
         formatResults(results),
         filters,
@@ -178,21 +178,15 @@ const spinner2 = ora('now reporting...\n')
         exclude,
       )
       spinner2.stop()
-      if (report) {
-        await mkdirp(path.resolve(process.cwd(), outDir))
-        fs.writeFileSync(
-          `${path.resolve(process.cwd(), outDir)}/a11y_report.${outputFormat}`,
-          report,
-        )
-        console.log(
-          `You can check the report out here:\n    ${chalk.underline.blue(
-            `${path.resolve(process.cwd(), `${outDir}/a11y_report.${outputFormat}`)}`,
-          )}`,
-        )
-        if (exit) process.exit(1)
-      } else {
-        console.log('\n✨ ✨ That\'s perfect, there is no a11y violation! ✨ ✨')
-      }
+      if (!hasViolation) console.log('✨ ✨ That\'s perfect, there is no a11y violation! ✨ ✨\n')
+      await mkdirp(path.resolve(process.cwd(), outDir))
+      fs.writeFileSync(`${path.resolve(process.cwd(), outDir)}/a11y_report.${outputFormat}`, report)
+      console.log(
+        `You can check the report out here:\n    ${chalk.underline.blue(
+          `${path.resolve(process.cwd(), `${outDir}/a11y_report.${outputFormat}`)}`,
+        )}`,
+      )
+      if (exit && hasViolation) process.exit(1)
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       console.error(
