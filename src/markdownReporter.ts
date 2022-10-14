@@ -6,7 +6,7 @@ const createMdReportMessage = (storybookUrl: string, violationId: string, violat
     .sort((a, b) => (a.storyId > b.storyId ? 1 : a.storyId < b.storyId ? -1 : 0))
     .reduce(
       (acc, { storyId }) => (acc += `- [${storyId}](${storybookUrl}/?path=/story/${storyId}\n)`),
-      `### A11y ID: ${violationId}\nDescription: ${violations[0].description}\n\nDetected on:\n`,
+      `### A11y ID: ${violationId}\n Failing Element Count: ${violations.length}\n\n Description: ${violations[0].description}\n\nDetected on:\n`,
     )
 }
 export const createMdReport = (

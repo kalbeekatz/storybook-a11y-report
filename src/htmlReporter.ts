@@ -11,7 +11,7 @@ const createHtmlReportMessage = (
     .reduce(
       (acc, { storyId }) =>
         (acc += `<li><a href="${storybookUrl}/?path=/story/${storyId}" target="_blank">${storyId}</a></li>`),
-      `<h3>A11y ID: ${violationId}</h3><p>Description: ${violations[0].description}<p>Detected on:<br/><ul>`,
+      `<h3>A11y ID: ${violationId}</h3><span style="font-weight: bold;">Failing Element Count: ${violations.length}</span><p>Description: ${violations[0].description}<p>Detected on:<br/><ul>`,
     )
 
   return `${formattedViolation}</ul>`
