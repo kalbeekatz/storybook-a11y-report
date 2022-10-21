@@ -40,7 +40,8 @@ export const createHtmlReport = (
     ? `<h2>${violationsCount} violations have been found</h2>${formattedResults.join('')}`
     : ''
 
-  return `<!DOCTYPE html>
+  return {
+    report: `<!DOCTYPE html>
 <html lang="en">
     <head>
         <meta charset="utf-8">
@@ -49,5 +50,7 @@ export const createHtmlReport = (
     <body>
         ${title}${commandOptions}${details}
     </body>
-</html>`
+</html>`,
+    hasViolation: !!violationsCount,
+  }
 }

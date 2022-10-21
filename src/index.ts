@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+/* eslint-disable no-console */
 import os from 'os'
 import path from 'path'
 import fs from 'fs'
@@ -23,7 +24,7 @@ import { Result } from './result.js'
 import { createMdReport } from './markdownReporter.js'
 import { createHtmlReport } from './htmlReporter.js'
 
-const require = createRequire(import.meta.url);
+const require = createRequire(import.meta.url)
 const { getRules } = Axe
 
 interface A11yParameters {
@@ -85,14 +86,14 @@ const createReport = outputFormat === 'md' ? createMdReport : createHtmlReport
 const removeTags = (str: string) => {
   let cleanedString = str
 
-  if ((str !== null) && (str !== '') && str.includes('<')) {
-    str = str.toString();
-    const removedOpenBracket = str.replace( '<', '' );
-    cleanedString = removedOpenBracket.replace( '>', '' );
+  if (str !== null && str !== '' && str.includes('<')) {
+    str = str.toString()
+    const removedOpenBracket = str.replace('<', '')
+    cleanedString = removedOpenBracket.replace('>', '')
     removeTags(cleanedString)
   }
 
-  return cleanedString;
+  return cleanedString
 }
 
 const formatResults = (results: Result[][]) => {
@@ -122,7 +123,7 @@ const spinner2 = ora('now reporting...\n')
       [...Array(cpuLength - 1).keys()].map((i) => new StoryPreviewBrowser(connection, i).boot()),
     )
     try {
-      if (!stories.length) throw Error(`There is no story. Change the conditions and try again.`)
+      if (!stories.length) throw Error('There is no story. Change the conditions and try again.')
       const service = createExecutionService(workers, stories, (story) => async (worker) => {
         await worker.setCurrentStory(story)
         await new MetricsWatcher(worker.page).waitForStable()
@@ -157,18 +158,18 @@ const spinner2 = ora('now reporting...\n')
           return axe.run(element, options)
         }, story)
         return (
-            runResults?.violations.map((violation) => {
-                  const cleanDescription = removeTags(violation.description)
-                  return ({
-                    violationId: violation.id,
-                    storyId: story.id,
-                    description: cleanDescription,
-                  })
-                }
-            ) || [])
+          runResults?.violations.map((violation) => {
+            const cleanDescription = removeTags(violation.description)
+            return {
+              violationId: violation.id,
+              storyId: story.id,
+              description: cleanDescription,
+            }
+          }) || []
+        )
       })
       const results = await service.execute()
-      const report = createReport(
+      const { report, hasViolation } = createReport(
         storybookUrl,
         formatResults(results),
         filters,
@@ -177,21 +178,16 @@ const spinner2 = ora('now reporting...\n')
         exclude,
       )
       spinner2.stop()
-      if (report) {
-        await mkdirp(path.resolve(process.cwd(), outDir))
-        fs.writeFileSync(
-          `${path.resolve(process.cwd(), outDir)}/a11y_report.${outputFormat}`,
-          report,
-        )
-        console.log(
-          `You can check the report out here:\n    ${chalk.underline.blue(
-            `${path.resolve(process.cwd(), `${outDir}/a11y_report.${outputFormat}`)}`,
-          )}`,
-        )
-        if (exit) process.exit(1)
-      } else {
-        console.log(`\n✨ ✨ That's perfect, there is no a11y violation! ✨ ✨`)
-      }
+      if (!hasViolation) console.log('✨ ✨ That\'s perfect, there is no a11y violation! ✨ ✨\n')
+      await mkdirp(path.resolve(process.cwd(), outDir))
+      fs.writeFileSync(`${path.resolve(process.cwd(), outDir)}/a11y_report.${outputFormat}`, report)
+      console.log(
+        `You can check the report out here:\n    ${chalk.underline.blue(
+          `${path.resolve(process.cwd(), `${outDir}/a11y_report.${outputFormat}`)}`,
+        )}`,
+      )
+      if (exit && hasViolation) process.exit(1)
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       console.error(
         `${errorText} There is an error about the execution of this script:`,
@@ -205,6 +201,7 @@ const spinner2 = ora('now reporting...\n')
       await Promise.all(workers.map((worker) => worker.close()))
       await connection.disconnect()
     }
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (err: any) {
     spinner1.stop()
     console.error(`${errorText} There is an error about connection:`, err.message)
