@@ -2,6 +2,10 @@
 
 CLI tool for [storybook-addon-a11y](https://github.com/storybookjs/storybook/tree/next/addons/a11y).
 
+## Report Example
+
+![Report examples](docs/example.png)
+
 ## Getting Started
 
 ### Prerequisites
