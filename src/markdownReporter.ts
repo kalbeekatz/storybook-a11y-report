@@ -5,8 +5,8 @@ const createMdReportMessage = (storybookUrl: string, violationId: string, violat
   return violations
     .sort((a, b) => (a.storyId > b.storyId ? 1 : a.storyId < b.storyId ? -1 : 0))
     .reduce(
-      (acc, { storyId }) => (acc += `- [${storyId}](${storybookUrl}/?path=/story/${storyId}\n)`),
-      `### A11y ID: ${violationId}\n Failing Element Count: ${violations.length}\n\n Description: ${violations[0].description}\n\nDetected on:\n`,
+      (acc, { storyId }) => (acc += `- [${storyId}](${storybookUrl}/?path=/story/${storyId})\n`),
+      `### A11y ID: ${violationId}\nFailing Element Count: ${violations.length}\n\nDescription: ${violations[0].description}\n\nDetected on:\n`,
     )
 }
 export const createMdReport = (
@@ -29,7 +29,7 @@ export const createMdReport = (
     omits,
   )
   const details = formattedResults.length
-    ? `## ${violationsCount} violations have been found\n${formattedResults.join('\n\n')}`
+    ? `## ${violationsCount} violations have been found\n${formattedResults.join('\n')}`
     : ''
 
   return { report: `${title}${commandOptions}${details}`, hasViolation: !!violationsCount }

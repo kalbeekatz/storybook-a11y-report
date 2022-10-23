@@ -8,3 +8,4 @@ examples/
 .prettierrc
 renovate.json
 tools/
+docs/
