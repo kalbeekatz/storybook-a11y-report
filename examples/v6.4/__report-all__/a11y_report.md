@@ -8,7 +8,7 @@
 ### A11y ID: color-contrast
 Failing Element Count: 1
 
-Description: Ensures the contrast between foreground and background colors meets WCAG 2 AA contrast ratio thresholds
+Description: Ensures the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds
 
 Detected on:
 - [example-button--inaccessible](http://localhost:6006/?path=/story/example-button--inaccessible)

@@ -3,7 +3,7 @@
 import os from 'os'
 import path from 'path'
 import fs from 'fs'
-import mkdirp from 'mkdirp'
+import { mkdirp } from 'mkdirp'
 import {
   Story,
   StorybookConnection,
@@ -15,7 +15,7 @@ import {
 import { pipe, groupBy, flatten } from 'remeda'
 import Axe, { ElementContext, Spec, RunOptions } from 'axe-core'
 import minimist from 'minimist'
-import minimatch from 'minimatch'
+import { minimatch } from 'minimatch'
 import chalk from 'chalk'
 import ora from 'ora'
 import { createRequire } from 'module'
