@@ -28,3 +28,12 @@ npm run a11y-report:html
 npm run a11y-report:ignore-specific-rule
 npm run a11y-report:ignore-specific-component
 kill -9 $(lsof -t -i:6006)
+
+cd ../v7
+npx http-server storybook-static --port 6006 --silent &
+npx wait-on tcp:6006
+npm run a11y-report
+npm run a11y-report:html
+npm run a11y-report:ignore-specific-rule
+npm run a11y-report:ignore-specific-component
+kill -9 $(lsof -t -i:6006)
