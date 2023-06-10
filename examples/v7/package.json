@@ -8,7 +8,11 @@
     "start": "next start",
     "lint": "next lint",
     "storybook": "storybook dev -p 6006",
-    "build-storybook": "storybook build"
+    "build-storybook": "storybook build",
+    "a11y-report": "storybook-a11y-report --outDir '__report-all__'",
+    "a11y-report:html": "storybook-a11y-report --outDir '__report-all__' --outputFormat html",
+    "a11y-report:ignore-specific-rule": "storybook-a11y-report -o color-contrast --outDir '__report-ignore-specific-rule__'",
+    "a11y-report:ignore-specific-component": "storybook-a11y-report -e '**/Form/**' --outDir '__report-ignore-specific-component__'"
   },
   "dependencies": {
     "@types/node": "20.2.5",
@@ -20,6 +24,7 @@
     "typescript": "5.0.4"
   },
   "devDependencies": {
+    "@storybook/addon-a11y": "^7.0.18",
     "@storybook/addon-essentials": "^7.0.18",
     "@storybook/addon-interactions": "^7.0.18",
     "@storybook/addon-links": "^7.0.18",
@@ -27,6 +32,7 @@
     "@storybook/nextjs": "^7.0.18",
     "@storybook/react": "^7.0.18",
     "@storybook/testing-library": "^0.0.14-next.2",
-    "storybook": "^7.0.18"
+    "storybook": "^7.0.18",
+    "storybook-a11y-report": "file:../.."
   }
 }

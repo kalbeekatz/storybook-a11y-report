@@ -1,8 +1,7 @@
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react'
 
-import { Button } from './Button';
+import { Button } from './Button'
 
-// More on how to set up stories at: https://storybook.js.org/docs/react/writing-stories/introduction
 const meta: Meta<typeof Button> = {
   title: 'Example/Button',
   component: Button,
@@ -12,35 +11,39 @@ const meta: Meta<typeof Button> = {
       control: 'color',
     },
   },
-};
+}
 
-export default meta;
-type Story = StoryObj<typeof Button>;
+export default meta
+type Story = StoryObj<typeof Button>
 
-// More on writing stories with args: https://storybook.js.org/docs/react/writing-stories/args
-export const Primary: Story = {
+export const Inaccessible: Story = {
   args: {
     primary: true,
     label: 'Button',
   },
-};
+}
 
-export const Secondary: Story = {
+export const Accessible: Story = {
   args: {
     label: 'Button',
   },
-};
+}
 
-export const Large: Story = {
+export const InaccessibleButIgnoreColorContrastRule: Story = {
   args: {
-    size: 'large',
+    primary: true,
     label: 'Button',
   },
-};
-
-export const Small: Story = {
-  args: {
-    size: 'small',
-    label: 'Button',
+  parameters: {
+    a11y: {
+      config: {
+        rules: [
+          {
+            id: 'color-contrast',
+            enabled: false,
+          },
+        ],
+      },
+    },
   },
-};
+}

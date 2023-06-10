@@ -131,9 +131,17 @@ const spinner2 = ora('now reporting...\n')
         await worker.page.addScriptTag({
           path: require.resolve('axe-core'),
         })
+        await worker.page.evaluate(async () => {
+          // @ts-ignore
+          await window['__STORYBOOK_CLIENT_API__'].storyStore?.cacheAllCSFFiles()
+        })
         const runResults = await worker.page.evaluate((story) => {
           const getElement = () => {
-            return document.getElementById('root') || document
+            return (
+              document.getElementById('root') ||
+              document.getElementById('storybook-root') ||
+              document
+            )
           }
           const getParams = (storyId: string): A11yParameters => {
             // @ts-ignore
