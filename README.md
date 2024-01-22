@@ -42,7 +42,7 @@ npx storybook-a11y-report
 ## Built With
 
 - [Storycrawler](https://github.com/reg-viz/storycap/tree/master/packages/storycrawler) - Utilities to build Storybook crawling tools with Puppeteer
-- [storybook-addon-a11y](https://github.com/storybookjs/storybook/tree/next/addons/a11y) - Test components for user accessibility in Storybook
+- [storybook-addon-a11y](https://github.com/storybookjs/storybook/tree/next/code/addons/a11y) - Test components for user accessibility in Storybook
 - [minimatch](https://github.com/isaacs/minimatch) - A minimal matching utility
 
 ## License
