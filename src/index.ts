@@ -11,6 +11,7 @@ import {
   StoryPreviewBrowser,
   MetricsWatcher,
   createExecutionService,
+  Logger,
 } from 'storycrawler'
 import { pipe, groupBy, flatten } from 'remeda'
 import Axe, { ElementContext, Spec, RunOptions } from 'axe-core'
@@ -51,11 +52,13 @@ const {
   include = [],
   exclude = [],
   filter = [],
+  loglevel = 'silent',
   omit = [],
   storybookUrl = 'http://localhost:6006',
   outDir = '__report__',
   exit,
   outputFormat = 'md',
+  timeout = 30000,
 } = argv
 if (!supportedOutputFormats.includes(outputFormat)) {
   console.error(
@@ -110,11 +113,14 @@ const formatResults = (results: Result[][]) => {
 }
 const spinner1 = ora('now loading storybook...\n')
 const spinner2 = ora('now reporting...\n')
+const logger = new Logger(loglevel)
 ;(async function () {
   try {
     spinner1.start()
-    const connection = await new StorybookConnection({ storybookUrl }).connect()
-    const storiesBrowser = await new StoriesBrowser(connection).boot()
+    const connection = await new StorybookConnection({ storybookUrl }, logger).connect()
+    const storiesBrowser = await new StoriesBrowser(connection, {}, logger).boot()
+    storiesBrowser.page.setDefaultTimeout(timeout)
+    storiesBrowser.page.setDefaultNavigationTimeout(timeout)
     const allStories = await storiesBrowser.getStories()
     const stories = filterStories(allStories, flatten([include]), flatten([exclude]))
     spinner1.succeed(`Found ${chalk.green(stories.length.toString())} stories.\n`)
