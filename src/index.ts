@@ -117,7 +117,10 @@ const logger = new Logger(loglevel)
 ;(async function () {
   try {
     spinner1.start()
-    const connection = await new StorybookConnection({ storybookUrl }, logger).connect()
+    const connection = await new StorybookConnection(
+      { storybookUrl, serverTimeout: timeout },
+      logger,
+    ).connect()
     const storiesBrowser = await new StoriesBrowser(connection, {}, logger).boot()
     storiesBrowser.page.setDefaultTimeout(timeout)
     storiesBrowser.page.setDefaultNavigationTimeout(timeout)
