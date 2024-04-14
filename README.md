@@ -2,6 +2,12 @@
 
 CLI tool for [storybook-addon-a11y](https://github.com/storybookjs/storybook/tree/next/addons/a11y).
 
+# storybook-a11y-report is no longer maintained, please use Storybook test runner and axe-playwright instead!
+
+The storybook-a11y-report project is now discontinued.
+Please switch to the Storybook test runner and axe-playwright for accessibility testing.
+We thank everyone who supported storybook-a11y-report throughout its journey.
+
 ## Report Example
 
 ![Report examples](docs/example.png)
