@@ -41,6 +41,8 @@ npx storybook-a11y-report
 --omit, -o      ID of A11y to ignore
 --exit, -q      The process will be terminated abnormally, if there is an a11y violation in the report result (mainly for CI)
 --storybookUrl  URL of Storybook (default: 'http://localhost:6006')
+--loglevel      Set the loglevel (default: 'silent')
+--timeout       Timeout for requests (default: 30000)
 --outDir        Directory to output the report file (default: '__report__')
 --outputFormat  Format of the output report, supports md or html (default: md)
 ```
